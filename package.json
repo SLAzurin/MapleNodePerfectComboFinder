@@ -1,0 +1,15 @@
+{
+    "name": "ms-nodes-perfect-combo-finder-db",
+    "version": "1.0.0",
+    "description": "",
+    "main": "main.ts",
+    "scripts": {
+      "dev": "ts-node main.ts"
+    },
+    "author": "SLAzurin",
+    "license": "MIT",
+    "devDependencies": {
+      "@types/node": "^18.0.0"
+    }
+  }
+  
