@@ -1,14 +1,22 @@
-const nodes: Array<Array<string>> = require("./nodes.json"); // Updated as of July 2nd 2022
+interface NodesCollection {
+  [key: string]: Array<Array<string>>;
+}
+interface BisBoostNodes {
+  [key: string]: Array<string>;
+}
+const nodesCollection: NodesCollection = require("./nodes.json");
+const bisBoostNodes: BisBoostNodes = require("./bis_boost_nodes.json");
+
+// Params Here:
+const job = "db";
+
+const nodes = nodesCollection[job];
 
 for (let i = 0; i < nodes.length; i++) {
-  let initialNode: any = {
-    "blade ascension": false,
-    "blade clone": false,
-    "blade fury": false,
-    "sudden raid": false,
-    asura: false,
-    phantom: false,
-  };
+  let initialNode: any = {};
+  for (let bisSkillNames of bisBoostNodes[job]) {
+    initialNode[bisSkillNames] = false;
+  }
 
   nodes[i].forEach((skill) => {
     initialNode[skill] = true;
