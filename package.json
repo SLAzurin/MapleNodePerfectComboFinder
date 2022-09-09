@@ -4,12 +4,11 @@
     "description": "",
     "main": "main.ts",
     "scripts": {
-      "dev": "ts-node main.ts"
+        "dev": "ts-node main.ts"
     },
     "author": "SLAzurin",
     "license": "MIT",
     "devDependencies": {
-      "@types/node": "^18.0.0"
+        "@types/node": "^18.7.16"
     }
-  }
-  
+}
