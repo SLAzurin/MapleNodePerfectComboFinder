@@ -1,11 +1,52 @@
 [
-    ["blade ascension", "blade clone", "blade fury"],
-    ["phantom" , "blade fury" , "blade clone"],
-    ["phantom" , "asura" , "blade clone"],
-    ["asura" , "phantom" , "blade clone"],
-    ["blade clone" , "sudden raid" , "phantom"],
-    ["blade clone" , "sudden raid" , "blade fury"],
-    ["blade clone" , "phantom" , "asura"],
-    ["blade clone" , "blade ascension" , "asura"],
-    ["blade clone" , "phantom" , "blade fury"]
+    [
+        "blade clone",
+        "sudden raid",
+        "phantom"
+    ],
+    [
+        "blade ascension",
+        "blade clone",
+        "blade fury"
+    ],
+    [
+        "phantom",
+        "asura",
+        "blade clone"
+    ],
+    [
+        "phantom",
+        "blade fury",
+        "blade clone"
+    ],
+    [
+        "asura",
+        "phantom",
+        "blade clone"
+    ],
+    [
+        "asura",
+        "sudden raid",
+        "phantom"
+    ],
+    [
+        "blade clone",
+        "blade ascension",
+        "asura"
+    ],
+    [
+        "blade clone",
+        "phantom",
+        "asura"
+    ],
+    [
+        "blade clone",
+        "sudden raid",
+        "blade fury"
+    ],
+    [
+        "blade clone",
+        "phantom",
+        "blade fury"
+    ]
 ]
