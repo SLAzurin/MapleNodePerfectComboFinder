@@ -8,7 +8,9 @@ const nodesCollection: NodesCollection = require("./nodes.json");
 const bisBoostNodes: BisBoostNodes = require("./bis_boost_nodes.json");
 
 // Params Here:
-const job = "db";
+const job = process.env.JOB || "";
+
+if (job === "") process.exit(1);
 
 const nodes = nodesCollection[job];
 
