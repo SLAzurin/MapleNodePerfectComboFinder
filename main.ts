@@ -1,5 +1,5 @@
 interface NodesCollection {
-  [key: string]: Array<Array<string>>;
+  [key: string]: Array<Array<number>>;
 }
 interface BisBoostNodes {
   [key: string]: Array<string>;
@@ -12,6 +12,18 @@ const job = process.env.JOB || "";
 
 if (job === "") process.exit(1);
 
+
+// Functions
+const formatTriNode = (triNode: Array<number>): Array<string> => {
+  let arr: Array<string> = []
+  for (let skillNum of triNode) {
+    arr.push(bisBoostNodes[job][skillNum])
+  }
+  return arr
+}
+
+// Logic
+
 const nodes = nodesCollection[job];
 
 for (let i = 0; i < nodes.length; i++) {
@@ -21,7 +33,7 @@ for (let i = 0; i < nodes.length; i++) {
   }
 
   nodes[i].forEach((skill) => {
-    initialNode[skill] = true;
+    initialNode[bisBoostNodes[job][skill]] = true;
   });
 
   for (let j = 0; j < nodes.length; j++) {
@@ -29,7 +41,7 @@ for (let i = 0; i < nodes.length; i++) {
     let nodeMatchAttempt: any = { ...initialNode };
     let toContinue = false;
     for (let k = 0; k < nodes[j].length; k++) {
-      let skill = nodes[j][k];
+      let skill = bisBoostNodes[job][nodes[j][k]];
       if (nodeMatchAttempt[skill] == true) {
         toContinue = true;
         break;
@@ -37,6 +49,6 @@ for (let i = 0; i < nodes.length; i++) {
       nodeMatchAttempt[skill] = true;
     }
     if (toContinue) continue;
-    console.log("Found perfect combo", i + 1, nodes[i], j + 1, nodes[j]);
+    console.log("Found perfect combo", i + 1, formatTriNode(nodes[i]), j + 1, formatTriNode(nodes[j]));
   }
 }
