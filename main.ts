@@ -1,26 +1,28 @@
+import { jsonc } from "jsonc";
+
 interface NodesCollection {
   [key: string]: Array<Array<number>>;
 }
 interface BisBoostNodes {
   [key: string]: Array<string>;
 }
-const nodesCollection: NodesCollection = require("./nodes.json");
-const bisBoostNodes: BisBoostNodes = require("./bis_boost_nodes.json");
+
+const nodesCollection: NodesCollection = jsonc.readSync("./nodes.jsonc");
+const bisBoostNodes: BisBoostNodes = jsonc.readSync("./bis_boost_nodes.jsonc");
 
 // Params Here:
 const job = process.env.JOB || "";
 
 if (job === "") process.exit(1);
 
-
 // Functions
 const formatTriNode = (triNode: Array<number>): Array<string> => {
-  let arr: Array<string> = []
+  let arr: Array<string> = [];
   for (let skillNum of triNode) {
-    arr.push(bisBoostNodes[job][skillNum])
+    arr.push(bisBoostNodes[job][skillNum]);
   }
-  return arr
-}
+  return arr;
+};
 
 // Logic
 
@@ -49,6 +51,12 @@ for (let i = 0; i < nodes.length; i++) {
       nodeMatchAttempt[skill] = true;
     }
     if (toContinue) continue;
-    console.log("Found perfect combo", i + 1, formatTriNode(nodes[i]), j + 1, formatTriNode(nodes[j]));
+    console.log(
+      "Found perfect combo",
+      i + 1,
+      formatTriNode(nodes[i]),
+      j + 1,
+      formatTriNode(nodes[j])
+    );
   }
 }

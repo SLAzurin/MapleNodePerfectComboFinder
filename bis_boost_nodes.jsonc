@@ -1,0 +1,22 @@
+// Check scardor's spreadsheet https://docs.google.com/spreadsheets/d/1io246lExk9ppw-od7ZtQfUcRBIyDo3ONtv3ufub76Xk/edit#gid=0
+{
+  "db": [
+    "blade ascension",
+    "blade clone",
+    "blade fury",
+    "sudden raid",
+    "asura",
+    "phantom"
+  ],
+  "fp": [
+    "flame sweep", // 0
+    "mist eruption", // 1
+    "flame haze", // 2
+    "meteor shower", // 3
+    "meggido", // 4
+    "ifrit", // 5
+    "ignite",
+    "teleport mastery",
+    "inferno aura"
+  ]
+}
