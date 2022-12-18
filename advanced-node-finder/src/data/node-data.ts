@@ -1,4 +1,4 @@
-import { BisBoostNodes, NodesCollection, JOB } from "../components/node-finder/node-finder-types";
+import { BisBoostNodes, NodesCollection } from "../components/node-finder/node-finder-types";
 
 // Check scardor's spreadsheet https://docs.google.com/spreadsheets/d/1io246lExk9ppw-od7ZtQfUcRBIyDo3ONtv3ufub76Xk/edit#gid=0
 export const bisBoostNodes: BisBoostNodes =
@@ -19,28 +19,29 @@ export const bisBoostNodes: BisBoostNodes =
         "Meggido Flame", // 4
         "Ifrit", // 5
         "Ignite", // 6
-        "Yeleport Mastery", // 7
-        "inferno aura" // 8
+        "Teleport Mastery", // 7
+        "Inferno Aura" // 8
     ]
 }
 
 export const sampleNodes: NodesCollection = {
     "Blade Master": [
-        [1,3,5],
-        [0,1,2],
-        [5,4,1],
-        [5,2,1],
-        [4,5,1],
-        [4,3,5],
-        [1,0,4],
-        [1,5,4],
-        [1,3,2],
-        [1,5,2]
+        [1, 3, 5],
+        [0, 1, 2],
+        [5, 4, 1],
+        [5, 2, 1],
+        [4, 5, 1],
+        [4, 3, 5],
+        [1, 0, 4],
+        [1, 5, 4],
+        [1, 3, 2],
+        [1, 5, 2],
+        []
     ],
     "Arch Mage (Fire, Poison)": [
-        [0,4,2],
-        [0,4,3],
-        [2,4,1],
+        [0, 4, 2],
+        [0, 4, 3],
+        [2, 4, 1],
         []
     ]
 }

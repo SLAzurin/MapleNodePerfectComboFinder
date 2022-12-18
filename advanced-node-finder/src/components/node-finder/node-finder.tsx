@@ -1,16 +1,18 @@
-import React, { useState, useEffect, FunctionComponent } from "react";
-import { BisBoostNodes, JOB, NodesCollection } from "./node-finder-types";
+import { useState, useEffect, FunctionComponent } from "react";
+import { JOB } from "./node-finder-types";
 import {
   bisBoostNodes as dataBisBoostNodes,
   sampleNodes,
 } from "../../data/node-data";
 
-export const NodeFinder: FunctionComponent<{}> = ({}) => {
+export const NodeFinder: FunctionComponent = () => {
   const [nodesCollection, setNodesCollection] = useState(sampleNodes);
   const [job, setJob] = useState(JOB.FP as string);
   const [bisBoostNodes, setBISBoostNodes] = useState(dataBisBoostNodes[job]);
   const [findResults, setFindResults] = useState(null as number[] | null);
-  const formatTriNode = (nodeIDs: Array<number>): { [key: number]: Array<string> } => {
+  const formatTriNode = (
+    nodeIDs: Array<number>
+  ): { [key: number]: Array<string> } => {
     let arr: { [key: number]: Array<string> } = {};
 
     for (let nodeID of nodeIDs) {
@@ -106,6 +108,13 @@ export const NodeFinder: FunctionComponent<{}> = ({}) => {
         title="job_select"
         onChange={(e) => {
           setFindResults(null);
+
+          if (typeof nodesCollection[e.target.value] === "undefined") {
+            let newNodesCollection = { ...nodesCollection };
+            newNodesCollection[job] = [];
+            setNodesCollection(newNodesCollection);
+          }
+
           setJob(e.target.value);
         }}
         value={job}
@@ -124,37 +133,90 @@ export const NodeFinder: FunctionComponent<{}> = ({}) => {
       <table>
         <tbody>
           {
-            /* map each node */ nodesCollection[job].map((v, i) => (
-              <tr key={i}>
-                <td>{i + 1}:</td>
+            /* map each node */ nodesCollection[job].map((node, nodeID) => (
+              <tr key={nodeID}>
+                <td>{nodeID + 1}:</td>
                 {
-                  /* map each skill from node */ v.map((v, j) => (
-                    <td key={i + "_" + j}>
-                      <select
-                        name={i + " " + j}
-                        value={v}
-                        onChange={(e) => {
-                          console.log(i, j, e.target.value);
-                        }}
-                      >
-                        {
-                          /* map each name from skill */ bisBoostNodes.map(
-                            (v, k) => (
-                              <option key={j + "_" + k} value={k}>
-                                {v}
-                              </option>
+                  /* map each skill from node */ node.map(
+                    (skillID, skillIndex, currentNode) => (
+                      <td key={nodeID + "_" + skillIndex}>
+                        <select
+                          title={"select_" + nodeID + "_" + skillIndex}
+                          value={skillID}
+                          onChange={(e) => {
+                            console.log(nodeID, skillIndex, e.target.value);
+                          }}
+                        >
+                          {
+                            /* map each name from skill */ bisBoostNodes.map(
+                              (bisSkillName, bisSkillID) => {
+                                if (
+                                  currentNode.includes(bisSkillID) &&
+                                  skillID !== bisSkillID
+                                )
+                                  return null;
+                                return (
+                                  <option
+                                    key={
+                                      nodeID +
+                                      "_" +
+                                      skillIndex +
+                                      "_" +
+                                      bisSkillID
+                                    }
+                                    value={bisSkillID}
+                                  >
+                                    {bisSkillName}
+                                  </option>
+                                );
+                              }
                             )
-                          )
-                        }
-                      </select>
-                    </td>
-                  ))
+                          }
+                        </select>
+                      </td>
+                    )
+                  )
                 }
+                {node.length < 3 &&
+                  [0, 1, 2].map((v) => {
+                    if (!(v >= node.length)) return null;
+                    return (
+                      <td key={"select_" + nodeID + "_new" + v}>
+                        <select
+                          title={"select_" + nodeID + "_new" + v}
+                          defaultValue="-1"
+                        >
+                          <option key={nodeID + "_" + v + "_none"} value={-1}>
+                            {" "}
+                          </option>
+                          {
+                            /* map each name from skill */ bisBoostNodes.map(
+                              (bisSkillName, bisSkillID) => {
+                                if (node.includes(bisSkillID)) return null;
+                                return (
+                                  <option
+                                    key={nodeID + "_" + v + "_" + bisSkillID}
+                                    value={bisSkillID}
+                                  >
+                                    {bisSkillName}
+                                  </option>
+                                );
+                              }
+                            )
+                          }
+                        </select>
+                      </td>
+                    );
+                  })}
+                <td>
+                  <button type="button">Remove #{nodeID + 1}</button>
+                </td>
               </tr>
             ))
           }
         </tbody>
       </table>
+      <br />
 
       <button
         type="button"
@@ -164,7 +226,16 @@ export const NodeFinder: FunctionComponent<{}> = ({}) => {
       >
         Add node
       </button>
+      <button
+        type="button"
+        onClick={() => {
+          console.log("click remove all nodes");
+        }}
+      >
+        Remove all nodes
+      </button>
 
+      <br />
       <br />
 
       {/* FIND BUTTON AND RESULTS SELECTION */}
@@ -181,7 +252,9 @@ export const NodeFinder: FunctionComponent<{}> = ({}) => {
         (findResults.length !== 0 ? (
           <div>
             <h3>Found compatible node:</h3>
-            <pre>{JSON.stringify(formatTriNode(findResults),undefined,4)}</pre>
+            <pre>
+              {JSON.stringify(formatTriNode(findResults), undefined, 4)}
+            </pre>
           </div>
         ) : (
           <h3>No result.</h3>
