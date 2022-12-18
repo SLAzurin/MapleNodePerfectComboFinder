@@ -7,7 +7,7 @@ import {
 
 export const NodeFinder: FunctionComponent<{}> = ({}) => {
   const [nodesCollection, setNodesCollection] = useState(sampleNodes);
-  const [job, setJob] = useState(JOB.DB as string);
+  const [job, setJob] = useState(JOB.FP as string);
   const [bisBoostNodes, setBISBoostNodes] = useState(dataBisBoostNodes[JOB.DB]);
   const [findResults, setFindResults] = useState(null as number[] | null);
   const formatTriNode = (nodeIDs: Array<number>): Array<string> => {
@@ -101,7 +101,25 @@ export const NodeFinder: FunctionComponent<{}> = ({}) => {
 
   return (
     <div>
+      <h2>Select your job:</h2>
+      <select
+        title="job_select"
+        onChange={(e) => {
+          console.log(e.target.value);
+          setFindResults(null);
+          setJob(e.target.value);
+        }}
+        value={job}
+      >
+        {(Object.keys(JOB) as (keyof typeof JOB)[]).map((v, i) => (
+          <option key={i} value={JOB[v]}>
+            {JOB[v]}
+          </option>
+        ))}
+      </select>
+      <br />
       <button
+        type="button"
         onClick={() => {
           console.log("find()");
           find();
@@ -109,10 +127,11 @@ export const NodeFinder: FunctionComponent<{}> = ({}) => {
       >
         find()
       </button>
+
       {findResults &&
         (findResults.length !== 0 ? (
           <div>
-            <h1>Found compatible node:</h1>
+            <h3>Found compatible node:</h3>
             {JSON.stringify(formatTriNode(findResults))}
           </div>
         ) : (
