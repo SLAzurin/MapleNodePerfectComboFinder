@@ -8,14 +8,15 @@ import {
 export const NodeFinder: FunctionComponent<{}> = ({}) => {
   const [nodesCollection, setNodesCollection] = useState(sampleNodes);
   const [job, setJob] = useState(JOB.FP as string);
-  const [bisBoostNodes, setBISBoostNodes] = useState(dataBisBoostNodes[JOB.DB]);
+  const [bisBoostNodes, setBISBoostNodes] = useState(dataBisBoostNodes[job]);
   const [findResults, setFindResults] = useState(null as number[] | null);
-  const formatTriNode = (nodeIDs: Array<number>): Array<string> => {
-    let arr: Array<string> = [];
+  const formatTriNode = (nodeIDs: Array<number>): { [key: number]: Array<string> } => {
+    let arr: { [key: number]: Array<string> } = {};
 
     for (let nodeID of nodeIDs) {
       nodesCollection[job][nodeID].forEach((skillID) => {
-        arr.push(bisBoostNodes[skillID]);
+        if (typeof arr[nodeID + 1] === "undefined") arr[nodeID + 1] = [];
+        arr[nodeID + 1].push(bisBoostNodes[skillID]);
       });
     }
     return arr;
@@ -85,7 +86,9 @@ export const NodeFinder: FunctionComponent<{}> = ({}) => {
     }
     setFindResults([]);
   };
-
+  useEffect(() => {
+    setBISBoostNodes(dataBisBoostNodes[job]);
+  }, [job]);
   useEffect(() => {
     // component "on load"
     // load localstorage
@@ -93,19 +96,15 @@ export const NodeFinder: FunctionComponent<{}> = ({}) => {
     if ((strNodesCollection = localStorage.getItem("nodesCollection"))) {
       setNodesCollection(JSON.parse(strNodesCollection));
     }
-    let strBisBoostNodes: string | null;
-    if ((strBisBoostNodes = localStorage.getItem("bisBoostNodes"))) {
-      setBISBoostNodes(JSON.parse(strBisBoostNodes));
-    }
   }, []);
 
   return (
     <div>
+      {/* JOB SELECTION */}
       <h2>Select your job:</h2>
       <select
         title="job_select"
         onChange={(e) => {
-          console.log(e.target.value);
           setFindResults(null);
           setJob(e.target.value);
         }}
@@ -118,10 +117,60 @@ export const NodeFinder: FunctionComponent<{}> = ({}) => {
         ))}
       </select>
       <br />
+
+      {/* NODES COLLECTION SELECTION */}
+
+      <h3>Select your nodes:</h3>
+      <table>
+        <tbody>
+          {
+            /* map each node */ nodesCollection[job].map((v, i) => (
+              <tr key={i}>
+                <td>{i + 1}:</td>
+                {
+                  /* map each skill from node */ v.map((v, j) => (
+                    <td key={i + "_" + j}>
+                      <select
+                        name={i + " " + j}
+                        value={v}
+                        onChange={(e) => {
+                          console.log(i, j, e.target.value);
+                        }}
+                      >
+                        {
+                          /* map each name from skill */ bisBoostNodes.map(
+                            (v, k) => (
+                              <option key={j + "_" + k} value={k}>
+                                {v}
+                              </option>
+                            )
+                          )
+                        }
+                      </select>
+                    </td>
+                  ))
+                }
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+
       <button
         type="button"
         onClick={() => {
-          console.log("find()");
+          console.log("click add node");
+        }}
+      >
+        Add node
+      </button>
+
+      <br />
+
+      {/* FIND BUTTON AND RESULTS SELECTION */}
+      <button
+        type="button"
+        onClick={() => {
           find();
         }}
       >
@@ -132,7 +181,7 @@ export const NodeFinder: FunctionComponent<{}> = ({}) => {
         (findResults.length !== 0 ? (
           <div>
             <h3>Found compatible node:</h3>
-            {JSON.stringify(formatTriNode(findResults))}
+            <pre>{JSON.stringify(formatTriNode(findResults),undefined,4)}</pre>
           </div>
         ) : (
           <h3>No result.</h3>
