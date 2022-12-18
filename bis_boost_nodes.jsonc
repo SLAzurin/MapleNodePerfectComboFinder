@@ -15,8 +15,8 @@
     "meteor shower", // 3
     "meggido", // 4
     "ifrit", // 5
-    "ignite",
-    "teleport mastery",
-    "inferno aura"
+    "ignite", // 6
+    "teleport mastery", // 7
+    "inferno aura" // 8
   ]
 }
