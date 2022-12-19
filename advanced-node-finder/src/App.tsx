@@ -1,4 +1,3 @@
-import "./App.css";
 import { NodeFinder } from "./components/node-finder";
 
 const App = () => {
