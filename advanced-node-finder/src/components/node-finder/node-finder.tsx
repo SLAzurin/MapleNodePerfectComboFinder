@@ -1,15 +1,18 @@
 import { useState, useEffect, FunctionComponent } from "react";
-import { JOB } from "./node-finder-types";
+import { JOB, NodesCollection } from "./node-finder-types";
 import {
   bisBoostNodes as dataBisBoostNodes,
   sampleNodes,
 } from "../../data/node-data";
 
 export const NodeFinder: FunctionComponent = () => {
-  const [nodesCollection, setNodesCollection] = useState(sampleNodes);
-  const [job, setJob] = useState(JOB.FP as string);
+  const [nodesCollection, setNodesCollection] = useState<NodesCollection>({
+    "Blade Master": [],
+  });
+  const [job, setJob] = useState(JOB.DB as string);
   const [bisBoostNodes, setBISBoostNodes] = useState(dataBisBoostNodes[job]);
   const [findResults, setFindResults] = useState(null as number[] | null);
+
   const formatTriNode = (
     nodeIDs: Array<number>
   ): { [key: number]: Array<string> } => {
@@ -23,6 +26,7 @@ export const NodeFinder: FunctionComponent = () => {
     }
     return arr;
   };
+
   const find = () => {
     let initialNode: { [key: string]: boolean } = {};
     for (let bisSkillNames of bisBoostNodes) {
@@ -88,9 +92,15 @@ export const NodeFinder: FunctionComponent = () => {
     }
     setFindResults([]);
   };
+
+  useEffect(() => {
+    localStorage.setItem("nodesCollection", JSON.stringify(nodesCollection));
+  }, [nodesCollection]);
+
   useEffect(() => {
     setBISBoostNodes(dataBisBoostNodes[job]);
   }, [job]);
+
   useEffect(() => {
     // component "on load"
     // load localstorage
@@ -99,6 +109,36 @@ export const NodeFinder: FunctionComponent = () => {
       setNodesCollection(JSON.parse(strNodesCollection));
     }
   }, []);
+
+  const updateNode = (nodeID: number, index: number, value: number) => {
+    let newNodesCollection = { ...nodesCollection };
+    newNodesCollection[job][nodeID].splice(index, 1, value);
+    setNodesCollection(newNodesCollection);
+  };
+
+  const addSkillToNode = (nodeID: number, value: number) => {
+    let newNodesCollection = { ...nodesCollection };
+    newNodesCollection[job][nodeID].push(value);
+    setNodesCollection(newNodesCollection);
+  };
+
+  const addNewNode = () => {
+    let newNodesCollection = { ...nodesCollection };
+    newNodesCollection[job].push([]);
+    setNodesCollection(newNodesCollection);
+  };
+
+  const deleteNode = (nodeID: number) => {
+    let newNodesCollection = { ...nodesCollection };
+    newNodesCollection[job].splice(nodeID, 1);
+    setNodesCollection(newNodesCollection);
+  };
+
+  const deleteAllNodes = () => {
+    let newNodesCollection: NodesCollection = {};
+    newNodesCollection[job] = [];
+    setNodesCollection(newNodesCollection);
+  };
 
   return (
     <div>
@@ -133,7 +173,7 @@ export const NodeFinder: FunctionComponent = () => {
       <table>
         <tbody>
           {
-            /* map each node */ nodesCollection[job].map((node, nodeID) => (
+            /* map each node */ nodesCollection[job] && nodesCollection[job].map((node, nodeID) => (
               <tr key={nodeID}>
                 <td>{nodeID + 1}:</td>
                 {
@@ -144,7 +184,11 @@ export const NodeFinder: FunctionComponent = () => {
                           title={"select_" + nodeID + "_" + skillIndex}
                           value={skillID}
                           onChange={(e) => {
-                            console.log(nodeID, skillIndex, e.target.value);
+                            updateNode(
+                              nodeID,
+                              skillIndex,
+                              Number(e.target.value)
+                            );
                           }}
                         >
                           {
@@ -185,6 +229,12 @@ export const NodeFinder: FunctionComponent = () => {
                         <select
                           title={"select_" + nodeID + "_new" + v}
                           defaultValue="-1"
+                          onChange={(e) => {
+                            if (e.target.value === "-1") {
+                              return;
+                            }
+                            addSkillToNode(nodeID, Number(e.target.value));
+                          }}
                         >
                           <option key={nodeID + "_" + v + "_none"} value={-1}>
                             {" "}
@@ -209,7 +259,14 @@ export const NodeFinder: FunctionComponent = () => {
                     );
                   })}
                 <td>
-                  <button type="button">Remove #{nodeID + 1}</button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      deleteNode(nodeID);
+                    }}
+                  >
+                    Remove #{nodeID + 1}
+                  </button>
                 </td>
               </tr>
             ))
@@ -221,7 +278,7 @@ export const NodeFinder: FunctionComponent = () => {
       <button
         type="button"
         onClick={() => {
-          console.log("click add node");
+          addNewNode();
         }}
       >
         Add node
@@ -229,7 +286,7 @@ export const NodeFinder: FunctionComponent = () => {
       <button
         type="button"
         onClick={() => {
-          console.log("click remove all nodes");
+          deleteAllNodes();
         }}
       >
         Remove all nodes
