@@ -6,10 +6,16 @@ import {
 } from "../../data/node-data";
 
 export const NodeFinder: FunctionComponent = () => {
-  const [nodesCollection, setNodesCollection] = useState<NodesCollection>({
-    "Blade Master": [],
-  });
-  const [job, setJob] = useState(JOB.DB as string);
+  const [nodesCollection, setNodesCollection] = useState<NodesCollection>(
+    localStorage.getItem("nodesCollection") !== null
+      ? JSON.parse(localStorage.getItem("nodesCollection") as string)
+      : sampleNodes
+  );
+  const [job, setJob] = useState(
+    localStorage.getItem("job") !== null
+      ? (localStorage.getItem("job") as string)
+      : (JOB.DB as string)
+  );
   const [bisBoostNodes, setBISBoostNodes] = useState(dataBisBoostNodes[job]);
   const [findResults, setFindResults] = useState(null as number[] | null);
 
@@ -98,6 +104,8 @@ export const NodeFinder: FunctionComponent = () => {
   }, [nodesCollection]);
 
   useEffect(() => {
+    localStorage.setItem("job", job);
+
     setBISBoostNodes(dataBisBoostNodes[job]);
   }, [job]);
 
@@ -173,103 +181,104 @@ export const NodeFinder: FunctionComponent = () => {
       <table>
         <tbody>
           {
-            /* map each node */ nodesCollection[job] && nodesCollection[job].map((node, nodeID) => (
-              <tr key={nodeID}>
-                <td>{nodeID + 1}:</td>
-                {
-                  /* map each skill from node */ node.map(
-                    (skillID, skillIndex, currentNode) => (
-                      <td key={nodeID + "_" + skillIndex}>
-                        <select
-                          title={"select_" + nodeID + "_" + skillIndex}
-                          value={skillID}
-                          onChange={(e) => {
-                            updateNode(
-                              nodeID,
-                              skillIndex,
-                              Number(e.target.value)
-                            );
-                          }}
-                        >
-                          {
-                            /* map each name from skill */ bisBoostNodes.map(
-                              (bisSkillName, bisSkillID) => {
-                                if (
-                                  currentNode.includes(bisSkillID) &&
-                                  skillID !== bisSkillID
-                                )
-                                  return null;
-                                return (
-                                  <option
-                                    key={
-                                      nodeID +
-                                      "_" +
-                                      skillIndex +
-                                      "_" +
-                                      bisSkillID
-                                    }
-                                    value={bisSkillID}
-                                  >
-                                    {bisSkillName}
-                                  </option>
-                                );
-                              }
-                            )
-                          }
-                        </select>
-                      </td>
-                    )
-                  )
-                }
-                {node.length < 3 &&
-                  [0, 1, 2].map((v) => {
-                    if (!(v >= node.length)) return null;
-                    return (
-                      <td key={"select_" + nodeID + "_new" + v}>
-                        <select
-                          title={"select_" + nodeID + "_new" + v}
-                          defaultValue="-1"
-                          onChange={(e) => {
-                            if (e.target.value === "-1") {
-                              return;
+            /* map each node */ nodesCollection[job] &&
+              nodesCollection[job].map((node, nodeID) => (
+                <tr key={nodeID}>
+                  <td>{nodeID + 1}:</td>
+                  {
+                    /* map each skill from node */ node.map(
+                      (skillID, skillIndex, currentNode) => (
+                        <td key={nodeID + "_" + skillIndex}>
+                          <select
+                            title={"select_" + nodeID + "_" + skillIndex}
+                            value={skillID}
+                            onChange={(e) => {
+                              updateNode(
+                                nodeID,
+                                skillIndex,
+                                Number(e.target.value)
+                              );
+                            }}
+                          >
+                            {
+                              /* map each name from skill */ bisBoostNodes.map(
+                                (bisSkillName, bisSkillID) => {
+                                  if (
+                                    currentNode.includes(bisSkillID) &&
+                                    skillID !== bisSkillID
+                                  )
+                                    return null;
+                                  return (
+                                    <option
+                                      key={
+                                        nodeID +
+                                        "_" +
+                                        skillIndex +
+                                        "_" +
+                                        bisSkillID
+                                      }
+                                      value={bisSkillID}
+                                    >
+                                      {bisSkillName}
+                                    </option>
+                                  );
+                                }
+                              )
                             }
-                            addSkillToNode(nodeID, Number(e.target.value));
-                          }}
-                        >
-                          <option key={nodeID + "_" + v + "_none"} value={-1}>
-                            {" "}
-                          </option>
-                          {
-                            /* map each name from skill */ bisBoostNodes.map(
-                              (bisSkillName, bisSkillID) => {
-                                if (node.includes(bisSkillID)) return null;
-                                return (
-                                  <option
-                                    key={nodeID + "_" + v + "_" + bisSkillID}
-                                    value={bisSkillID}
-                                  >
-                                    {bisSkillName}
-                                  </option>
-                                );
+                          </select>
+                        </td>
+                      )
+                    )
+                  }
+                  {node.length < 3 &&
+                    [0, 1, 2].map((v) => {
+                      if (!(v >= node.length)) return null;
+                      return (
+                        <td key={"select_" + nodeID + "_new" + v}>
+                          <select
+                            title={"select_" + nodeID + "_new" + v}
+                            defaultValue="-1"
+                            onChange={(e) => {
+                              if (e.target.value === "-1") {
+                                return;
                               }
-                            )
-                          }
-                        </select>
-                      </td>
-                    );
-                  })}
-                <td>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      deleteNode(nodeID);
-                    }}
-                  >
-                    Remove #{nodeID + 1}
-                  </button>
-                </td>
-              </tr>
-            ))
+                              addSkillToNode(nodeID, Number(e.target.value));
+                            }}
+                          >
+                            <option key={nodeID + "_" + v + "_none"} value={-1}>
+                              {" "}
+                            </option>
+                            {
+                              /* map each name from skill */ bisBoostNodes.map(
+                                (bisSkillName, bisSkillID) => {
+                                  if (node.includes(bisSkillID)) return null;
+                                  return (
+                                    <option
+                                      key={nodeID + "_" + v + "_" + bisSkillID}
+                                      value={bisSkillID}
+                                    >
+                                      {bisSkillName}
+                                    </option>
+                                  );
+                                }
+                              )
+                            }
+                          </select>
+                        </td>
+                      );
+                    })}
+                  <td>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        deleteNode(nodeID);
+                      }}
+                    >
+                      Remove #{nodeID + 1}
+                    </button>
+                  </td>
+                </tr>
+              ))
           }
         </tbody>
       </table>
