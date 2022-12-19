@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/MapleNodePerfectComboFinder/static/js/main.604efb98.js",
+    "main.js": "/MapleNodePerfectComboFinder/static/js/main.48ed292e.js",
     "index.html": "/MapleNodePerfectComboFinder/index.html",
-    "main.604efb98.js.map": "/MapleNodePerfectComboFinder/static/js/main.604efb98.js.map"
+    "main.48ed292e.js.map": "/MapleNodePerfectComboFinder/static/js/main.48ed292e.js.map"
   },
   "entrypoints": [
-    "static/js/main.604efb98.js"
+    "static/js/main.48ed292e.js"
   ]
 }
