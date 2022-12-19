@@ -1,5 +1,5 @@
 import { useState, useEffect, FunctionComponent } from "react";
-import { JOB, NodesCollection } from "./node-finder-types";
+import { NodesCollection } from "./node-finder-types";
 import {
   bisBoostNodes as dataBisBoostNodes,
   sampleNodes,
@@ -14,7 +14,7 @@ export const NodeFinder: FunctionComponent = () => {
   const [job, setJob] = useState(
     localStorage.getItem("job") !== null
       ? (localStorage.getItem("job") as string)
-      : (JOB.DB as string)
+      : "Dual Blade"
   );
   const [bisBoostNodes, setBISBoostNodes] = useState(dataBisBoostNodes[job]);
   const [findResults, setFindResults] = useState(null as number[] | null);
@@ -167,9 +167,9 @@ export const NodeFinder: FunctionComponent = () => {
         }}
         value={job}
       >
-        {(Object.keys(JOB) as (keyof typeof JOB)[]).map((v, i) => (
-          <option key={i} value={JOB[v]}>
-            {JOB[v]}
+        {Object.keys(dataBisBoostNodes).map((v, i) => (
+          <option key={i} value={v}>
+            {v}
           </option>
         ))}
       </select>

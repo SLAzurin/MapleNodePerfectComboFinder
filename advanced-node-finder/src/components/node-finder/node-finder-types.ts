@@ -4,8 +4,4 @@ export interface NodesCollection {
 export interface BisBoostNodes {
     [key: string]: Array<string>;
 }
-export enum JOB {
-    DB = "Blade Master",
-    FP = "Arch Mage (Fire, Poison)"
-}
 
