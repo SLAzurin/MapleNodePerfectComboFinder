@@ -159,7 +159,7 @@ export const NodeFinder: FunctionComponent = () => {
 
           if (typeof nodesCollection[e.target.value] === "undefined") {
             let newNodesCollection = { ...nodesCollection };
-            newNodesCollection[job] = [];
+            newNodesCollection[e.target.value] = [];
             setNodesCollection(newNodesCollection);
           }
 
