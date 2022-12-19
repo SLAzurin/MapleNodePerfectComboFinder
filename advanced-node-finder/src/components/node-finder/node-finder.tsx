@@ -271,6 +271,7 @@ export const NodeFinder: FunctionComponent = () => {
                     <button
                       type="button"
                       onClick={() => {
+                        setFindResults(null);
                         deleteNode(nodeID);
                       }}
                     >
@@ -287,6 +288,7 @@ export const NodeFinder: FunctionComponent = () => {
       <button
         type="button"
         onClick={() => {
+          setFindResults(null);
           addNewNode();
         }}
       >
@@ -295,6 +297,7 @@ export const NodeFinder: FunctionComponent = () => {
       <button
         type="button"
         onClick={() => {
+          setFindResults(null);
           deleteAllNodes();
         }}
       >
